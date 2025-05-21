@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="/auth/login.css">
+  <script>
+    window.onload = function () {
+        const msg = "<%= typeof message !== 'undefined' ? message : '' %>";
+        if (msg) {
+            alert(msg);
+        }
+    };
+</script>
+</head>
+<body>
+  <div class="login-container">
+    <h1>Welcome Back</h1>
+    <p>Please login to your account</p>
+    <br>
+    <form action="/auth/login" method="POST">
+      <label for="role">Login as</label>
+      <select id="role" name="role" required>
+        <option value="" disabled selected>Choose Role</option>
+        <option value="user">User</option>
+        <option value="driver">Driver</option>
+      </select>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+      <button type="submit">Login</button>
+
+      <div class="links">
+        <p>Don't have an account? <a href="/auth/userSignup"> Sign Up</a></p> <!-- Link to sign-up page -->
+        <a href="/auth/reset-password" class="forgot-password">Forgot Password?</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Validate role selection
+    document.querySelector("form").addEventListener("submit", function (e) {
+      const role = document.getElementById("role").value;
+
+      if (!role) {
+        e.preventDefault();
+        alert("Please select a role!");
+      }
+    });
+  </script>
+</body>
+</html>

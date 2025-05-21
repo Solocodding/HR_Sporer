@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Drivers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f9;
+            color: #333;
+        }
+
+        .header {
+            width: 100%;
+            height: 40px;
+            background-color: #2d89ef;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .driver-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .driver-list li {
+            padding: 15px 10px;
+            margin-bottom: 10px;
+            background: #ecf0f1;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .driver-list li:hover {
+            background: #dcdde1;
+        }
+
+        #driver-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
+
+        #modal-content iframe {
+            width: 100%;
+            height: 300px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        button.approve {
+            background: #27ae60;
+            color: white;
+        }
+
+        button.approve:hover {
+            background: #219150;
+        }
+
+        button.delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        button.delete:hover {
+            background: #c0392b;
+        }
+
+        button.close {
+            background: #7f8c8d;
+            color: white;
+        }
+
+        button.close:hover {
+            background: #616a6b;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            button {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="back-button" onclick="history.back()"><b>←</b></button>
+    </div>
+    <div class="container">
+        <h1>New Drivers</h1>
+        <% if (drivers.length === 0) { %>
+            <p>No new drivers found.</p>
+        <% } %> 
+
+        <ul class="driver-list">
+            <% drivers.forEach(driver => { %>
+                <li onclick="viewDriverModal('<%= driver._id %>', '<%= driver.license %>')">
+                    <span><strong>Name:</strong> <%= driver.fullName %></span>
+                    <span><strong>Email:</strong> <%= driver.email %></span>
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+
+    <div id="driver-modal">
+        <div id="modal-content">
+            <h2>Driver Details</h2>
+            <p id="driver-info"></p>
+            <iframe id="driver-pdf" src=""></iframe>
+            <button class="approve" onclick="approveDriver()">Approve</button>
+            <button class="delete" onclick="deleteDriver()">Delete Driver</button>
+            <button class="close" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        let currentDriverId;
+
+        const viewDriverModal = (driverId, licenseUrl) => {
+            document.getElementById('driver-info').textContent = `Driver ID: ${driverId}`;
+            document.getElementById('driver-pdf').src = licenseUrl;
+            document.getElementById('driver-modal').style.display = 'flex';
+            currentDriverId = driverId;
+        };
+
+        const closeModal = () => {
+            document.getElementById('driver-modal').style.display = 'none';
+        };
+
+        const approveDriver = async () => {
+            try {
+                await fetch(`/admin-dashboard/approve-driver/${currentDriverId}`, { method: 'POST' });
+                alert('Driver approved successfully');
+                location.reload();
+            } catch (error) {
+                alert('Error approving driver');
+                console.error(error);
+            }
+        };
+
+        const deleteDriver = async () => {
+            try {
+                await fetch(`/admin-dashboard/delete-driver/${currentDriverId}`, { method: 'DELETE' });
+                alert('Driver deleted successfully');
+                location.reload();
+            } catch (error) {
+                alert('Error deleting driver');
+                console.error(error);
+            }
+        };
+    </script>
+</body>
+
+</html>

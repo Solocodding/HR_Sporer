@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Routes</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            width: 100%;
+            background-color: #2d89ef;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .search-container {
+            width: 100%;
+            background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            position: sticky;
+            top: 50px; /* Adjusted for the header */
+            z-index: 999;
+        }
+
+        .search-container form {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-container input {
+            flex: 1;
+            width: 80%;
+            min-width: 200px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .search-container button {
+            background-color: #2d89ef;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-container button:hover {
+            background-color: #1e6bb8;
+        }
+
+        .main-content {
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            const msg = "<%= typeof message !== 'undefined' ? message : '' %>";
+            if (msg) {
+                alert(msg);
+            }
+        };
+    </script>
+</head>
+
+<body>
+    <!-- Header with Go Back button -->
+    <div class="header">
+        <button class="back-button" onclick="history.back()">←</button>
+        <h1>Search Routes</h1>
+    </div>
+
+    <div class="search-container">
+        <form action="/user-dashboard/searchCard" method="POST">
+            <input type="text" id="start" name="start" placeholder="Start Bus Stand" required>
+            <input type="text" id="destination" name="destination" placeholder="Destination Bus Stand" required>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <div class="main-content">
+        <p>Use the search bar above to find your route!</p>
+    </div>
+</body>
+
+</html>

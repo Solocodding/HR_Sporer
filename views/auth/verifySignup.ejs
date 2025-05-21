@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Signup</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .verify-container {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+
+        .verify-container h1 {
+            text-align: center;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555555;
+        }
+
+        input,
+        select {
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
+        }
+
+        button {
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 600px) {
+            .verify-container {
+                padding: 15px;
+            }
+
+            input,
+            select,
+            button {
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            const msg = "<%= typeof message !== 'undefined' ? message : '' %>";
+            if (msg) {
+                alert(msg);
+            }
+        };
+    </script>
+</head>
+
+<body>
+    <div class="verify-container">
+        <h1>Verify Your Signup</h1>
+        <form action="/auth/verify/signup" method="POST">
+
+            <!-- User/Driver Role Selection -->
+            <label for="role">Choose your role</label>
+            <select id="role" name="role" required>
+                <option value="" disabled selected>Select your role</option>
+                <option value="user">User</option>
+                <option value="driver">Driver</option>
+            </select>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your registered email" aria-label="Email"
+                required>
+
+            <label for="otp">OTP</label>
+            <input type="text" id="otp" name="otp" placeholder="Enter the OTP sent to your email" aria-label="OTP"
+                required>
+
+            <button type="submit">Verify</button>
+        </form>
+    </div>
+
+    <script>
+        // OTP Validation
+        document.getElementById("otp").addEventListener("input", function (e) {
+            const otpField = e.target;
+            otpField.value = otpField.value.replace(/[^0-9]/g, ""); // Allow only numbers
+            if (otpField.value.length > 6) {
+                otpField.value = otpField.value.slice(0, 6); // Limit to 6 digits
+            }
+        });
+
+        // Form Submission Feedback
+        const form = document.querySelector("form");
+        const button = form.querySelector("button");
+
+        form.addEventListener("submit", function () {
+            button.disabled = true;
+            button.textContent = "Verifying...";
+        });
+    </script>
+</body>
+
+</html>

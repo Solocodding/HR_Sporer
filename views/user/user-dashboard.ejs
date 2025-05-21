@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="/user-dashboard.css">
+  <script>
+    window.onload = function () {
+        const msg = "<%= typeof message !== 'undefined' ? message : '' %>";
+        if (msg) {
+            alert(msg);
+        }
+    };
+</script>
+</head>
+
+<body>
+  <div class="navbar">
+    <div class="menu">
+      <button id="dropdownMenu">☰</button>
+      <div class="dropdown-content">
+        <a href="#">Profile</a>
+        <a href="#">My Routes</a>
+        <a href="/auth/logout">Logout</a>
+      </div>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="searchBar" placeholder="Where are you going?" />
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="map-container">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzRIwtGugBIo1jGvnTnyC9YIzd8BnaJdFrGw&s" alt="Map"
+        id="map">
+    </div>
+  </div>
+
+  <script>
+    // Toggle dropdown menu
+    document.getElementById('dropdownMenu').addEventListener('click', () => {
+      const dropdown = document.querySelector('.dropdown-content');
+      dropdown.classList.toggle('show');
+    });
+
+    // Redirect to /user-dashboard/searchCard on search bar click
+    document.getElementById('searchBar').addEventListener('click', () => {
+      window.location.href = '/user-dashboard/searchCard';
+    });
+
+    // Event listener on map
+    document.getElementById('map').addEventListener('click', () => {
+      alert('Map clicked! Add functionality as needed.');
+    });
+  </script>
+</body>
+
+</html>
