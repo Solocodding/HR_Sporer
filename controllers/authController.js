@@ -264,7 +264,7 @@ async function resetPassword(req, res) {
             foundUser = await Driver.findOne({email: email});
         }
         if (!foundUser) {
-            return res.status(404).send("User not found with given email");
+            return res.status(404).render('auth/resetPassword', { message: 'User not found with given email' });
         }
         const randomReq = uuid.v4();
         const userVerifyURL = `https://hr-sporer.onrender.com/auth/reset-password/${randomReq}/${foundUser.id}`;
@@ -322,7 +322,7 @@ async function updatePassword(req, res) {
                 foundUser = await Driver.findById(userId);
             }   
             if (!foundUser) {
-                return res.status(404).send("User not found with given email");
+                return res.status(404).render('auth/resetPassword',{message: "User not found with given email"});
             }
             foundUser.password = await bcrypt.hash(password, 10);
             await foundUser.save();

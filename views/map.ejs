@@ -68,20 +68,18 @@
 
         // Fetch the drivers from the server-rendered data
         const Drivers = JSON.parse('<%- matchingDrivers %>');
-        // console.log(Drivers);//////////////////////////
 
         const defaultCenter = {
             lat: Drivers[0].location.lat,
             lng: Drivers[0].location.lng,
         };
-        // console.log("check")/////////////////////
         // Initialize Google Map
         async function initMap () {
-            console.log("Google Maps API loaded, initializing map...");///////////////////////////
+            // console.log("Google Maps API loaded, initializing map...");///////////////////////////
             const { Map } = await google.maps.importLibrary("maps");
             map = new Map(document.getElementById('map'), {
                 center: defaultCenter,
-                zoom: 10,
+                zoom: 16,
                 // mapId: "DEMO_MAP_ID", // Map ID is required for advanced markers.
             });
 
@@ -159,10 +157,8 @@
             await initMap();
             startPolling();
         });
-        // window.addEventListener('load', startPolling());
-
-        // Stop polling when the page is unloaded
-        window.addEventListener('beforeunload', stopPolling());
+        
+        window.addEventListener('beforeunload', stopPolling);
     </script>
 </body>
 

@@ -34,12 +34,6 @@ function startLocationUpdates() {
         (position) => {
             const { latitude, longitude, accuracy } = position.coords;
 
-            // Skip updates if accuracy is poor
-            // if (accuracy > 50) {
-            //     console.warn("Skipping update due to poor accuracy:", accuracy);
-            //     return;
-            // }
-
             // Send the location data to the server
             sendLocationToServer(latitude, longitude, accuracy);
         },
