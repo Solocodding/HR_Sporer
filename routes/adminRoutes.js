@@ -17,7 +17,7 @@ router.get('/new-drivers', verifyToken, adminCheck, async (req, res) => {
         const newDrivers = await Driver.find({ isApproved: false }).select('fullName email license');
         const updatedDrivers = newDrivers.map(driver => ({
             ...driver._doc,
-            license: `/${driver.license}` // Assuming `license` contains the filename only
+            license: `/${driver.license}` 
         }));
         res.render('admin/newDriver.ejs', { drivers: updatedDrivers });
     } catch (error) {

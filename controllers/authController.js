@@ -1,9 +1,11 @@
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
+const uuid = require("uuid");
 const User = require('../models/User');
 const Driver = require('../models/Driver');
 const { generateToken } = require('../utils/jwtUtils');
 
+const verifyuserList = {};
 // Separate OTP stores for users and drivers
 const userOtpStore = new Map();
 const driverOtpStore = new Map();
@@ -173,6 +175,7 @@ const verifySignup = async (req, res) => {
                 email,
                 password: hashedPassword,
                 isVerified: true,
+                role: 'user',
             });
             await newUser.save();
             userStore.delete(email);
@@ -183,6 +186,7 @@ const verifySignup = async (req, res) => {
                 password: hashedPassword,
                 license: userDetails.licensePath,
                 isVerified: true,
+                role: 'driver',
             });
             await newDriver.save();
             driverStore.delete(email);
@@ -250,10 +254,94 @@ const login = async (req, res) => {
     }
 };
 
+let resetPasswordList = {};
+async function resetPassword(req, res) {
+    try {
+        const email = req.body.email;
+
+        let foundUser = await User.findOne({ email: email });
+        if(!foundUser) {
+            foundUser = await Driver.findOne({email: email});
+        }
+        if (!foundUser) {
+            return res.status(404).send("User not found with given email");
+        }
+        const randomReq = uuid.v4();
+        const userVerifyURL = `https://hr-sporer.onrender.com/auth/reset-password/${randomReq}/${foundUser.id}`;
+        // const userVerifyURL = `http://localhost:9191/auth/reset-password/${randomReq}/${foundUser.id}`;
+        verifyuserList[foundUser.id] = {
+            time: Date.now(),
+            uniqueReq: randomReq,
+        };
+        resetPasswordList[foundUser.id] = {
+            email: foundUser.email,
+        };
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Reset Password',
+            text: `Hello User,\n\nClick on the link to reset your password ${userVerifyURL}.\n\nIf you did not request this, please ignore this email.`,
+        };
+        await transporter.sendMail(mailOptions);
+        return res.render('auth/login', { message: 'Reset password link sent to your email.' });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+    }
+}
+function verifyResetPassword(req, res) {
+    const randomReq = req.params.randomReq;
+    const userId = req.params.id;
+    console.log("userId", userId);
+
+    if (verifyuserList[userId] && verifyuserList[userId].uniqueReq === randomReq &&
+        (Date.now() - verifyuserList[userId].time) <= 10 * 60 * 1000) {
+        console.log("chek1");
+        delete verifyuserList[userId];
+        console.log("chek2");
+        res.redirect("/auth/updatePassword");
+    } else {
+        delete verifyuserList[userId];
+        res.redirect("/auth/reset-password");
+    }
+}
+
+async function updatePassword(req, res) {
+    try {
+        const password = req.body.password;
+        const email = req.body.email;
+        const userId = Object.keys(resetPasswordList).find(key => resetPasswordList[key].email === email);
+
+        if (!resetPasswordList[userId]) {
+            return res.status(404).render('auth/resetPassword', { message: 'Invalid or expired reset link Or invalid email'});
+        }
+        else {
+            let foundUser = await User.findById(userId);
+            if(!foundUser) {
+                foundUser = await Driver.findById(userId);
+            }   
+            if (!foundUser) {
+                return res.status(404).send("User not found with given email");
+            }
+            foundUser.password = await bcrypt.hash(password, 10);
+            await foundUser.save();
+            delete resetPasswordList[userId];
+        }
+        return res.render("./auth/login", { message: "Password updated successfully" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+    }
+}
+
 module.exports = {
     signupUser,
     signupDriver,
     verifySignup,
     login,
+    resetPassword,
+    verifyResetPassword,
+    updatePassword
 };
 

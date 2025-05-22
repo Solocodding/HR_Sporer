@@ -15,9 +15,9 @@ const updateLocation = async (req, res) => {
 // Update Route
 const updateRoute = async (req, res) => {
     let { from, via, to } = req.body;
-    from=from.toLowerCase();
-    to=to.toLowerCase();
-    via=via.map((stop) => stop.toLowerCase());
+    from=from.toLowerCase().trim();
+    to=to.toLowerCase().trim();
+    via=via.map((stop) => stop.toLowerCase().trim());
     try {
         await Driver.findByIdAndUpdate(req.user.id, { from, via, to });
         res.status(200).send('Route updated');

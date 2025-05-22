@@ -21,10 +21,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false, // False until email verification is complete
   },
-  isAdmin: {
-    type: Boolean,
-    default: false, // False until email verification is complete
-  },
+  role:{
+      type:String,
+      required:true
+  }
 });
 
 const User = mongoose.model("User", userSchema);

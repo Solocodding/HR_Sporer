@@ -6,9 +6,7 @@ const verifyToken = async (req, res, next) => {
     const token = req.cookies.authToken;
 
     if (!token) {
-        return res.status(400).render('auth/login', {
-            message: 'Token expired. Please log in to access this page',
-        });
+        return res.status(400).render('auth/login');
     }
 
     try {

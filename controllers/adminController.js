@@ -27,7 +27,7 @@ const approveDriver = async (req, res) => {
             from: process.env.EMAIL_USER,
             to: driver.email,
             subject: 'Driver Document Approved',
-            text: `Hello ${driver.fullName},\n\nYour document has been approved. You can login now as a driver. follow the link: http://localhost:9191/auth/login`,
+            text: `Hello ${driver.fullName},\n\nYour document has been approved. You can login now as a driver. follow the link: http://hr-sporer.onrender.com/auth/login`,
         };
         await transporter.sendMail(mailOptions);
 
@@ -50,7 +50,7 @@ const deleteDriver = async (req, res) => {
             from: process.env.EMAIL_USER,
             to: driver.email,
             subject: 'Driver Document Denied',
-            text: `Hello ${driver.fullName},\n\nYour document has been rejected. You have to create a new account and make sure your document is valid. follow the link: http://localhost:9191/auth/driverSignup`,
+            text: `Hello ${driver.fullName},\n\nYour document has been rejected. You have to create a new account and make sure your document is valid. follow the link: https://hr-sporer.onrender.com/auth/driverSignup`,
         };
         await transporter.sendMail(mailOptions);
 

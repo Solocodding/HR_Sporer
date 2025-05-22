@@ -3,8 +3,8 @@ const Driver = require('../models/Driver');
 
 const searchRoutes = async (req, res) => {
     let { start, destination } = req.body;
-    start = start.toLowerCase();
-    destination = destination.toLowerCase();
+    start = start.toLowerCase().trim();
+    destination = destination.toLowerCase().trim();
 
     if (!start || !destination) {
         return res.status(400).json({ message: 'Both "start" and "destination" fields are required.' });
@@ -32,7 +32,7 @@ const searchRoutes = async (req, res) => {
         });
 
         if (validDrivers.length === 0) {
-            return res.render('user/searchCard', { message: 'No any Buses are running on this route now.' });
+            return res.render('user/searchCard', { message: 'No any Buses are running on this route right now.' });
         }
 
         return res.status(200).render('map', {
@@ -48,8 +48,8 @@ const searchRoutes = async (req, res) => {
 
 const fetchDriverUpdates = async (req, res) => {
     let { start, destination } = req.body;
-    start = start.toLowerCase();
-    destination = destination.toLowerCase();
+    start = start.toLowerCase().trim();
+    destination = destination.toLowerCase().trim();
 
     try {
         // Fetch drivers whose routes include both 'start' and 'destination'
