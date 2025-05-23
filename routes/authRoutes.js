@@ -22,7 +22,7 @@ router.get("/userSignup", (req, res) => {
 });
 
 // Route to render driver signup page
-router.get("/driverSignup",verifyToken, (req, res) => {
+router.get("/driverSignup", (req, res) => {
      if(req.isAuthenticated && req.user.role==="user") {
         return res.redirect('/user-dashboard');
     }else if(req.isAuthenticated && req.user.role==="driver") {
